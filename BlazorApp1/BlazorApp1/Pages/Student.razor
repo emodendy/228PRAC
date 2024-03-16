@@ -1,0 +1,85 @@
+﻿@page "/student"
+
+@using BlazorApp1.Data
+@*@using Data*@
+
+<h3>Student</h3>
+<input type="text" @bind="name" placeholder="Имя" />
+<input type="text" @bind="surname" placeholder="Фамилия" />
+<input type="text" @bind="lastname" placeholder="Отчество" />
+<input type="text" @bind="group" placeholder="Группа"/>
+<input type="text" @bind="birthday" />
+<button class = "btn btn-primary" @onclick="click">Add</button>
+<p>Кол-во записей: @currentCount</p>
+
+
+<table class="table">
+<thead>
+    <tr>
+        <th>"•</th>
+        <th>Фамилия</th>
+        <th>Имя</th>
+        <th>Отчество</th>
+        <th>Группа</th>
+        <th>Фото</th>
+        <th>Дата рождения</th>
+    </tr>
+</thead>
+<tbody>
+    @foreach (var student in students)
+    {
+        <tr>
+        <td>@student.ID</td>
+        <td>@student.Surname</td>
+        <td>@student.Name</td>
+        <td>@student.LastName</td>
+        <td>@student.Group</td>
+        @if (string.IsNullOrEmpty(student.Photo))
+        {
+            <td><img src = "/images/user-icon.png" alt = "заглушка" style = "width: 100px;" ></td>
+        }else
+        {
+            <td><img src="@student.Photo" alt="заглушка" style="width: 100px;"></td>
+        }
+        <td>@student.DateOfBirth.ToShortDateString()</td>
+        </tr>
+    }
+</tbody>
+</table>
+
+@code {
+
+    private string name;
+    private string surname;
+    private string lastname;
+    private string group;
+    private DateTime birthday;
+    static List<Students> students = new List<Students>
+     {
+         new Students (new Random().Next(10000,99999), "Платонова", "Полина","Олеговна", "228", "/img/user-icon.png", new DateTime(1990,5,15)),
+         new Students (new Random().Next(10000,99999), "Качковский", "Арсений","Владимирович", "220", "/img/user-icon.png", new DateTime(2006,10,27))
+
+    };
+    private int currentCount = students.Count;
+    private void click()
+    {
+        if (String.IsNullOrEmpty(name))
+        {
+            return;
+        }
+        else if (String.IsNullOrEmpty(surname))
+        {
+            return;
+        }
+        else if (String.IsNullOrEmpty(lastname))
+        {
+            return;
+        }
+        else
+        {
+            currentCount++;
+            students.Add(new Students(new Random().Next(10000, 99999), surname, name, lastname, group, "/img/user-icon.png", birthday));
+        }
+    }
+
+}
